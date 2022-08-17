@@ -1,8 +1,12 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { useContext } from "react";
+import { UserContext } from "../../contexts/UserContext";
+import defaultProfile from "../../assets/default-user-image.png";
 
 export default function Header() {
   const navigate = useNavigate();
+  const { token } = useContext(UserContext);
 
   return (
     <StyledHeader>
@@ -17,12 +21,24 @@ export default function Header() {
         <NavItem>
           <NavLink onClick={() => navigate("/about")}>Sobre</NavLink>
         </NavItem>
-        <NavItem>
-          <NavLink onClick={() => navigate("/sign-up")}>Criar conta</NavLink>
-        </NavItem>
-        <NavItem>
-          <Button onClick={() => navigate("/sign-in")}>Entrar</Button>
-        </NavItem>
+        {!token ? (
+          <>
+            <NavItem>
+              <NavLink onClick={() => navigate("/sign-up")}>
+                Criar conta
+              </NavLink>
+            </NavItem>
+            <NavItem>
+              <Button onClick={() => navigate("/sign-in")}>Entrar</Button>
+            </NavItem>
+          </>
+        ) : (
+          <>
+            <NavItem>
+              <ProfilePicture src={defaultProfile} />
+            </NavItem>
+          </>
+        )}
       </Navigation>
     </StyledHeader>
   );
@@ -85,4 +101,13 @@ const Button = styled.button`
   &:hover {
     background-color: #d20b15;
   }
+`;
+
+const ProfilePicture = styled.img`
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `;

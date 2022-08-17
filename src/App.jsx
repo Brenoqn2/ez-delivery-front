@@ -5,10 +5,10 @@ import { UserContext } from "./contexts/UserContext";
 import { useState } from "react";
 
 export default function App() {
-  const [token, setToken] = useState("");
+  const [token, setToken] = useState(localStorage.getItem("token"));
   return (
     <Router>
-      <UserContext.Provider value={(token, setToken)}>
+      <UserContext.Provider value={{ token, setToken }}>
         <Routes>
           <Route path="/sign-in" element={<LoginPage />} />
           <Route path="/" element={<LoginPage />} />

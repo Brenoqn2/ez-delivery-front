@@ -20,6 +20,7 @@ export default function LoginPage() {
       })
       .then((response) => {
         setToken(response.data.token);
+        localStorage.setItem("token", response.data.token);
         navigate("/main");
       })
       .catch((error) => {
