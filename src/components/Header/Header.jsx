@@ -60,6 +60,7 @@ const NavItem = styled.div`
   align-items: center;
   justify-content: center;
   margin-left: 20px;
+  cursor: pointer;
 `;
 
 const NavLink = styled.a`
@@ -80,6 +81,7 @@ const Button = styled.button`
   border-radius: 5px;
   font-size: 14px;
   font-weight: bold;
+  cursor: pointer;
   &:hover {
     background-color: #d20b15;
   }
