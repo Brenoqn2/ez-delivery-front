@@ -11,22 +11,23 @@ export default function LoginPage() {
   const { token, setToken } = useContext(UserContext);
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    axios
-      .post(`${process.env.REACT_APP_API_URL}/sign-in`, {
-        email,
-        password,
-      })
-      .then((response) => {
-        setToken(response.data.token);
-        localStorage.setItem("token", response.data.token);
-        navigate("/main");
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  };
+  async function handleSubmit(e) {
+    try {
+      e.preventDefault();
+      const response = await axios.post(
+        `${process.env.REACT_APP_API_URL}/sign-in`,
+        {
+          email,
+          password,
+        }
+      );
+      await setToken(response.data.token);
+      localStorage.setItem("token", response.data.token);
+      navigate("/main");
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   useEffect(() => {
     if (token) {
