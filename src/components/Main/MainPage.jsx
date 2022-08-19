@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
 import NewCustomer from "./NewCustomer";
 import NewOrder from "./NewOrder";
+import Deliverer from "./Deliverer";
 
 export default function MainPage() {
   const [address, setAddress] = useState([]);
@@ -62,9 +63,12 @@ export default function MainPage() {
         )}
         <Deliverers>
           <h1>Entregadores disponíveis</h1>
-          {availableDeliverers.map(() => {
-            return <></>;
+          {availableDeliverers.map((deliverer) => {
+            return <Deliverer deliverer={deliverer} />;
           })}
+          <NewDelivererButton>
+            <ion-icon name="add-outline"></ion-icon>
+          </NewDelivererButton>
         </Deliverers>
         <MapContainer>
           {address.length === 0 ? (
@@ -132,14 +136,16 @@ const Deliverers = styled.aside`
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  border-radius: 5px;
   width: 25%;
-  height: 100px;
-  background-color: #999999;
-  h1 {
+  height: calc(100vh - 135px);
+  padding: 5px;
+  margin-left: 5px;
+  margin-right: 5px;
+  > h1 {
     font-size: 20px;
     font-weight: bold;
-    color: #ea1d2c;
+    color: #333;
   }
 `;
 
@@ -174,5 +180,29 @@ const AutocompleteContainer = styled.div`
     font-size: 20px;
     font-weight: bold;
     margin-bottom: 10px;
+  }
+`;
+
+const NewDelivererButton = styled.button`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 10px;
+
+  width: 50%;
+  height: 40px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+  background-color: #ea1d2c;
+  color: #fff;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  &:hover {
+    background-color: #ea1d2c;
+    color: #fff;
+  }
+  ion-icon {
+    font-size: 25px;
   }
 `;
