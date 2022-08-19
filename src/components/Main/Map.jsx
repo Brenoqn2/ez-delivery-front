@@ -27,11 +27,11 @@ export default function SimpleMap(props) {
   );
 
   return (
-    <div style={{ height: "calc(100vh - 135px)", width: "100%" }}>
+    <div style={{ height: "calc(100vh - 180px)", width: "100%" }}>
       <GoogleMapReact
         bootstrapURLKeys={{ key: `${process.env.REACT_APP_MAPS_KEY}` }}
         defaultCenter={center}
-        defaultZoom={16}
+        defaultZoom={15}
       >
         <EstablishmentIcon
           lat={center.lat}

@@ -6,10 +6,12 @@ import axios from "axios";
 import { UserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
+import NewCustomer from "./NewCustomer";
 
 export default function MainPage() {
   const [address, setAddress] = useState([]);
   const { token, setToken } = useContext(UserContext);
+  const [newCustomerForm, setNewCustomerForm] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -38,6 +40,11 @@ export default function MainPage() {
     <>
       <Header />
       <StyledMainPage>
+        {newCustomerForm ? (
+          <NewCustomer setNewCustomerForm={setNewCustomerForm} />
+        ) : (
+          <></>
+        )}
         <Deliverers>
           <h1>Entregadores disponíveis</h1>
         </Deliverers>
@@ -76,7 +83,16 @@ export default function MainPage() {
               />
             </AutocompleteContainer>
           ) : (
-            <SimpleMap address={address} />
+            <>
+              <div>
+                <ion-icon name="document-sharp"></ion-icon>
+                <ion-icon
+                  name="person-add-sharp"
+                  onClick={() => setNewCustomerForm(true)}
+                ></ion-icon>
+              </div>
+              <SimpleMap address={address} />
+            </>
           )}
         </MapContainer>
       </StyledMainPage>
@@ -109,6 +125,22 @@ const Deliverers = styled.aside`
 const MapContainer = styled.div`
   width: 75%;
   height: 100%;
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+
+    ion-icon {
+      font-size: 22px;
+      color: #333;
+      margin-right: 10px;
+      cursor: pointer;
+      &:hover {
+        color: #ea1d2c;
+      }
+    }
+  }
 `;
 
 const AutocompleteContainer = styled.div`
