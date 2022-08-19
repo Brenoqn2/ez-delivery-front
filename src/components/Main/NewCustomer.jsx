@@ -94,7 +94,7 @@ export default function NewCustomer(props) {
   );
 }
 
-const Background = styled.div`
+export const Background = styled.div`
   background-color: rgb(0, 0, 0, 0.5);
   position: fixed;
   top: 0;
@@ -104,7 +104,7 @@ const Background = styled.div`
   z-index: 2;
 `;
 
-const Form = styled.form`
+export const Form = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -145,7 +145,7 @@ const Form = styled.form`
   }
 `;
 
-const FormButton = styled.button`
+export const FormButton = styled.button`
   width: 50%;
   max-width: 500px;
   height: 40px;

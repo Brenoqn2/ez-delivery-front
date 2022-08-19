@@ -7,11 +7,14 @@ import { UserContext } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import Autocomplete from "react-google-autocomplete";
 import NewCustomer from "./NewCustomer";
+import NewOrder from "./NewOrder";
 
 export default function MainPage() {
   const [address, setAddress] = useState([]);
   const { token, setToken } = useContext(UserContext);
   const [newCustomerForm, setNewCustomerForm] = useState(false);
+  const [newOrderForm, setNewOrderForm] = useState(false);
+  const [availableDeliverers, setAvailableDeliverers] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -34,12 +37,24 @@ export default function MainPage() {
         localStorage.removeItem("token");
         setToken("");
       });
+
+    axios
+      .get(`${process.env.REACT_APP_API_URL}/deliverers`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setAvailableDeliverers(response.data);
+      });
   }, [token, navigate, setToken]);
 
   return (
     <>
       <Header />
       <StyledMainPage>
+        {newOrderForm ? <NewOrder setNewOrderForm={setNewOrderForm} /> : <></>}
         {newCustomerForm ? (
           <NewCustomer setNewCustomerForm={setNewCustomerForm} />
         ) : (
@@ -47,6 +62,9 @@ export default function MainPage() {
         )}
         <Deliverers>
           <h1>Entregadores disponíveis</h1>
+          {availableDeliverers.map(() => {
+            return <></>;
+          })}
         </Deliverers>
         <MapContainer>
           {address.length === 0 ? (
@@ -85,7 +103,10 @@ export default function MainPage() {
           ) : (
             <>
               <div>
-                <ion-icon name="document-sharp"></ion-icon>
+                <ion-icon
+                  name="document-sharp"
+                  onClick={() => setNewOrderForm(true)}
+                ></ion-icon>
                 <ion-icon
                   name="person-add-sharp"
                   onClick={() => setNewCustomerForm(true)}
