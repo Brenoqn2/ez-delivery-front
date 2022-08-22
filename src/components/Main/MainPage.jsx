@@ -16,6 +16,7 @@ export default function MainPage() {
   const [newCustomerForm, setNewCustomerForm] = useState(false);
   const [newOrderForm, setNewOrderForm] = useState(false);
   const [availableDeliverers, setAvailableDeliverers] = useState([]);
+  const [orders, setOrders] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -49,6 +50,26 @@ export default function MainPage() {
         console.log(response.data);
         setAvailableDeliverers(response.data);
       });
+
+    setInterval(() => {
+      axios
+        .get(`${process.env.REACT_APP_API_URL}/orders`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        })
+        .then((response) => {
+          const newOrders = response.data;
+          if (orders.length === 0) {
+            setOrders(newOrders);
+          } else if (
+            newOrders[newOrders.length - 1].id !== orders[orders.length - 1].id
+          ) {
+            setOrders(newOrders);
+          }
+        });
+    }, 3000);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [token, navigate, setToken]);
 
   return (
@@ -64,7 +85,7 @@ export default function MainPage() {
         <Deliverers>
           <h1>Entregadores disponíveis</h1>
           {availableDeliverers.map((deliverer) => {
-            return <Deliverer deliverer={deliverer} />;
+            return <Deliverer deliverer={deliverer} key={deliverer.id} />;
           })}
           <NewDelivererButton>
             <ion-icon name="add-outline"></ion-icon>
@@ -116,7 +137,7 @@ export default function MainPage() {
                   onClick={() => setNewCustomerForm(true)}
                 ></ion-icon>
               </div>
-              <SimpleMap address={address} />
+              <SimpleMap address={address} orders={orders} token={token} />
             </>
           )}
         </MapContainer>
