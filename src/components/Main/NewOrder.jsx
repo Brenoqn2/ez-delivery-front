@@ -15,6 +15,7 @@ export default function NewOrder(props) {
   const [customers, setCustomers] = useState([]);
   const [total, setTotal] = useState("");
   const navigate = useNavigate();
+  const setLoading = props.setLoading;
 
   useEffect(() => {
     if (!token) {
@@ -88,6 +89,7 @@ export default function NewOrder(props) {
       .then((response) => {
         console.log(response);
         setNewOrderForm(false);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);

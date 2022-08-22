@@ -11,6 +11,7 @@ export default function NewCustomer(props) {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
+  const setLoading = props.setLoading;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -32,6 +33,7 @@ export default function NewCustomer(props) {
       .then((response) => {
         console.log(response);
         setNewCustomerForm(false);
+        setLoading(false);
       })
       .catch((error) => {
         console.log(error);

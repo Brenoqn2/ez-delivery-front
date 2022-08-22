@@ -9,17 +9,24 @@ import Autocomplete from "react-google-autocomplete";
 import NewCustomer from "./NewCustomer";
 import NewOrder from "./NewOrder";
 import Deliverer from "./Deliverer";
+import NewDeliverer from "./NewDeliverer";
 
 export default function MainPage() {
   const [address, setAddress] = useState([]);
   const { token, setToken } = useContext(UserContext);
   const [newCustomerForm, setNewCustomerForm] = useState(false);
   const [newOrderForm, setNewOrderForm] = useState(false);
+  const [newDelivererForm, setNewDelivererForm] = useState(false);
   const [availableDeliverers, setAvailableDeliverers] = useState([]);
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  let intervalId;
 
   useEffect(() => {
+    if (intervalId) {
+      clearInterval(intervalId);
+    }
     if (!token) {
       navigate("/sign-in");
       console.log(token);
@@ -51,7 +58,8 @@ export default function MainPage() {
         setAvailableDeliverers(response.data);
       });
 
-    setInterval(() => {
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    intervalId = setInterval(() => {
       axios
         .get(`${process.env.REACT_APP_API_URL}/orders`, {
           headers: {
@@ -70,15 +78,30 @@ export default function MainPage() {
         });
     }, 3000);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [token, navigate, setToken]);
+  }, [token, navigate, setToken, loading]);
 
   return (
     <>
       <Header />
       <StyledMainPage>
-        {newOrderForm ? <NewOrder setNewOrderForm={setNewOrderForm} /> : <></>}
+        {newDelivererForm ? (
+          <NewDeliverer
+            setLoading={setLoading}
+            setNewDelivererForm={setNewDelivererForm}
+          />
+        ) : (
+          <></>
+        )}
+        {newOrderForm ? (
+          <NewOrder setLoading={setLoading} setNewOrderForm={setNewOrderForm} />
+        ) : (
+          <></>
+        )}
         {newCustomerForm ? (
-          <NewCustomer setNewCustomerForm={setNewCustomerForm} />
+          <NewCustomer
+            setLoading={setLoading}
+            setNewCustomerForm={setNewCustomerForm}
+          />
         ) : (
           <></>
         )}
@@ -87,7 +110,12 @@ export default function MainPage() {
           {availableDeliverers.map((deliverer) => {
             return <Deliverer deliverer={deliverer} key={deliverer.id} />;
           })}
-          <NewDelivererButton>
+          <NewDelivererButton
+            onClick={() => {
+              setLoading(true);
+              setNewDelivererForm(true);
+            }}
+          >
             <ion-icon name="add-outline"></ion-icon>
           </NewDelivererButton>
         </Deliverers>
@@ -130,11 +158,17 @@ export default function MainPage() {
               <div>
                 <ion-icon
                   name="document-sharp"
-                  onClick={() => setNewOrderForm(true)}
+                  onClick={() => {
+                    setLoading(true);
+                    setNewOrderForm(true);
+                  }}
                 ></ion-icon>
                 <ion-icon
                   name="person-add-sharp"
-                  onClick={() => setNewCustomerForm(true)}
+                  onClick={() => {
+                    setLoading(true);
+                    setNewCustomerForm(true);
+                  }}
                 ></ion-icon>
               </div>
               <SimpleMap address={address} orders={orders} token={token} />
